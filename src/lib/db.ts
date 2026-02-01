@@ -111,3 +111,4 @@ export async function seedDefaultUsers(hashedPasswords: {
     ('demo@fsbhtiger.com', 'Demo Member', ${hashedPasswords.demo}, 'tiger', '1965')
   `;
 }
+// Database: Neon Postgres
