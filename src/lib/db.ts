@@ -77,7 +77,7 @@ export async function updateUserRole(userId: string, newRole: UserRole): Promise
     SET role = ${newRole}, updated_at = CURRENT_TIMESTAMP
     WHERE id = ${userId}
   `;
-  return result.rowCount > 0;
+  return (result.rowCount ?? 0) > 0;
 }
 
 // Delete user
@@ -85,7 +85,7 @@ export async function deleteUser(userId: string): Promise<boolean> {
   const result = await sql`
     DELETE FROM users WHERE id = ${userId}
   `;
-  return result.rowCount > 0;
+  return (result.rowCount ?? 0) > 0;
 }
 
 // Seed default users (for initial setup)
