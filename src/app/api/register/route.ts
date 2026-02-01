@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { addUser, findUserByEmail } from "@/lib/auth";
+import { addUser } from "@/lib/auth";
+import { findUserByEmail } from "@/lib/db";
 
 export async function POST(request: Request) {
   try {
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
     }
 
     // Check if user already exists
-    const existingUser = findUserByEmail(email);
+    const existingUser = await findUserByEmail(email);
     if (existingUser) {
       return NextResponse.json(
         { error: "An account with this email already exists" },
@@ -21,14 +22,15 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create new user
-    const user = addUser(email, name, password, classYear);
+    // Create new user (defaults to 'white' role)
+    const user = await addUser(email, name, password, "white", classYear);
 
     return NextResponse.json({
       message: "Account created successfully",
       user: { id: user.id, email: user.email, name: user.name },
     });
-  } catch {
+  } catch (error) {
+    console.error("Registration error:", error);
     return NextResponse.json(
       { error: "An error occurred during registration" },
       { status: 500 }
