@@ -1,0 +1,86 @@
+[
+  {
+    "wpId": 76,
+    "name": "Black History",
+    "slug": "black-history",
+    "parentSlug": null
+  },
+  {
+    "wpId": 68,
+    "name": "Catalogs",
+    "slug": "catalogs",
+    "parentSlug": null
+  },
+  {
+    "wpId": 71,
+    "name": "Community History",
+    "slug": "community-history",
+    "parentSlug": null
+  },
+  {
+    "wpId": 79,
+    "name": "Events Photos",
+    "slug": "events-photos",
+    "parentSlug": null
+  },
+  {
+    "wpId": 77,
+    "name": "Fun Stuff",
+    "slug": "fun-stuff",
+    "parentSlug": null
+  },
+  {
+    "wpId": 72,
+    "name": "Mason Said it",
+    "slug": "mason-said-it",
+    "parentSlug": "community-history"
+  },
+  {
+    "wpId": 70,
+    "name": "Newsletters",
+    "slug": "newsletters",
+    "parentSlug": null
+  },
+  {
+    "wpId": 1,
+    "name": "Others",
+    "slug": "others",
+    "parentSlug": null
+  },
+  {
+    "wpId": 75,
+    "name": "Politcs &amp; Opinions",
+    "slug": "politcs-opinions",
+    "parentSlug": null
+  },
+  {
+    "wpId": 74,
+    "name": "Reunions",
+    "slug": "reunions",
+    "parentSlug": null
+  },
+  {
+    "wpId": 78,
+    "name": "Scholarshps or Education",
+    "slug": "scholarshps-or-education",
+    "parentSlug": null
+  },
+  {
+    "wpId": 69,
+    "name": "School Memories",
+    "slug": "school-memories",
+    "parentSlug": null
+  },
+  {
+    "wpId": 73,
+    "name": "Sports",
+    "slug": "sports",
+    "parentSlug": null
+  },
+  {
+    "wpId": 80,
+    "name": "Yearbooks",
+    "slug": "yearbooks",
+    "parentSlug": null
+  }
+]

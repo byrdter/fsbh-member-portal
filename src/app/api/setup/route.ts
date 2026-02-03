@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { initializeDatabase, seedDefaultUsers } from "@/lib/db";
+import { initializeDatabase, seedDefaultUsers, initializeContentTables } from "@/lib/db";
 
 export async function GET() {
   try {
     // Initialize database tables
     await initializeDatabase();
+
+    // Initialize content tables
+    await initializeContentTables();
 
     // Hash passwords for default users
     const hashedPasswords = {
@@ -21,7 +24,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      message: "Database initialized and users seeded successfully",
+      message: "Database initialized with users and content tables",
     });
   } catch (error) {
     console.error("Setup error:", error);
