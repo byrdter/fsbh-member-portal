@@ -124,6 +124,7 @@ export async function GET(request: NextRequest) {
           access: "public",
           contentType,
           token: blobToken,
+          addRandomSuffix: true,
         });
 
         // Save to database
@@ -137,9 +138,6 @@ export async function GET(request: NextRequest) {
             ${blob.url},
             ${contentType}
           )
-          ON CONFLICT (wp_id) DO UPDATE SET
-            blob_url = ${blob.url},
-            mime_type = ${contentType}
         `;
 
         results.success++;
