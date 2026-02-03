@@ -33,20 +33,25 @@
 - [x] Parse WordPress XML export (196 posts, 14 categories, 2778 attachments)
 - [x] Create content tables schema (categories, posts, post_categories, media)
 - [x] Create /api/import endpoint for WordPress content
+- [x] Run /api/setup on production to create content tables
+- [x] Run /api/import on production to import WordPress content
+- [x] Create API endpoints for content (/api/posts, /api/categories, /api/posts/[slug])
+- [x] Update History page to fetch from database
+- [x] Update Photos page to fetch from database (events-photos category)
+- [x] Update Yearbooks page to fetch from database (yearbooks category)
+- [x] Create post detail page (/post/[slug])
 
 ## In Progress
-- [ ] Run /api/setup on production to create content tables
-- [ ] Run /api/import on production to import WordPress content
+- [ ] Test content display pages on production
 
 ## Pending Tasks
-- [ ] Create pages to display imported content with access control
 - [ ] Set up Vercel Blob storage for media files
 - [ ] Download and migrate 2,778 media files from WordPress
-- [ ] Create yearbooks section (tiger+ access)
-- [ ] Create photos section (maroon+ access)
-- [ ] Create history section (all members)
+- [ ] Clean WordPress content HTML (remove Elementor shortcodes, fix image URLs)
+- [ ] Handle 83 WordPress pages (rebuild or extract content)
 - [ ] Build admin dashboard for user management
 - [ ] Build admin dashboard for content management
+- [ ] Add pagination to content listing pages
 
 ---
 
@@ -55,9 +60,18 @@
 - `/api/import` - Import WordPress content from JSON files
 - `/api/register` - User registration (defaults to 'white' role)
 - `/api/auth/[...nextauth]` - NextAuth.js authentication
+- `/api/posts` - Get posts (supports ?category=slug, ?limit=N, ?offset=N)
+- `/api/posts/[slug]` - Get single post by slug
+- `/api/categories` - Get all categories with post counts
+
+## Content Pages
+- `/history` - All posts, filterable by category (all members)
+- `/photos` - Posts in events-photos category (maroon+ access)
+- `/yearbooks` - Posts in yearbooks category (tiger+ access)
+- `/post/[slug]` - View single post content
 
 ## WordPress Import Stats
 - Categories: 14
 - Posts: 196
-- Pages: 83
-- Attachments: 2,778
+- Pages: 83 (not yet migrated - contain Elementor content)
+- Attachments: 2,778 (not yet migrated)
