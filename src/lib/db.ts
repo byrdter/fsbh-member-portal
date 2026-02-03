@@ -216,7 +216,7 @@ export async function createPost(post: {
       ${post.postType || 'post'},
       ${post.featuredImage || null},
       ${post.author || null},
-      ${post.publishedAt || null},
+      ${post.publishedAt?.toISOString() || null},
       ${post.accessLevel || 'white'}
     )
     ON CONFLICT (slug) DO UPDATE SET

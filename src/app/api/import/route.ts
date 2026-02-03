@@ -20,7 +20,7 @@ export async function GET() {
           cat.name,
           cat.slug,
           cat.wpId,
-          cat.parentSlug
+          cat.parentSlug ?? undefined
         );
         categoryMap[cat.slug] = created.id;
         results.categories.imported++;
