@@ -37,8 +37,9 @@ function getContentType(ext: string): string {
 
 export async function GET(request: NextRequest) {
   try {
-    // Check for blob token
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    // Get blob token upfront
+    const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+    if (!blobToken) {
       return NextResponse.json(
         { error: "BLOB_READ_WRITE_TOKEN environment variable is not set" },
         { status: 500 }
@@ -122,7 +123,7 @@ export async function GET(request: NextRequest) {
         const blob = await put(filename, buffer, {
           access: "public",
           contentType,
-          token: process.env.BLOB_READ_WRITE_TOKEN,
+          token: blobToken,
         });
 
         // Save to database
