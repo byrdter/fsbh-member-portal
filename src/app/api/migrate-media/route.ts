@@ -37,6 +37,14 @@ function getContentType(ext: string): string {
 
 export async function GET(request: NextRequest) {
   try {
+    // Check for blob token
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      return NextResponse.json(
+        { error: "BLOB_READ_WRITE_TOKEN environment variable is not set" },
+        { status: 500 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get("limit") || "10");
     const offset = parseInt(searchParams.get("offset") || "0");
@@ -114,6 +122,7 @@ export async function GET(request: NextRequest) {
         const blob = await put(filename, buffer, {
           access: "public",
           contentType,
+          token: process.env.BLOB_READ_WRITE_TOKEN,
         });
 
         // Save to database
