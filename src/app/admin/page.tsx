@@ -10,7 +10,8 @@ import { UserRole } from "@/types/next-auth";
 interface User {
   id: string;
   email: string;
-  name: string;
+  first_name: string;
+  last_name: string;
   role: UserRole;
   class_year?: string;
 }
@@ -24,7 +25,7 @@ export default function AdminPage() {
   const [editingUser, setEditingUser] = useState<string | null>(null);
   const [newRole, setNewRole] = useState<UserRole>("white");
   const [showAddForm, setShowAddForm] = useState(false);
-  const [addForm, setAddForm] = useState({ email: "", name: "", password: "", role: "white" as UserRole, classYear: "" });
+  const [addForm, setAddForm] = useState({ email: "", firstName: "", lastName: "", password: "", role: "white" as UserRole, classYear: "" });
   const [addError, setAddError] = useState<string | null>(null);
   const [addLoading, setAddLoading] = useState(false);
   const [deletingUser, setDeletingUser] = useState<string | null>(null);
@@ -153,7 +154,8 @@ export default function AdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: addForm.email,
-          name: addForm.name,
+          firstName: addForm.firstName,
+          lastName: addForm.lastName,
           password: addForm.password,
           role: addForm.role,
           classYear: addForm.classYear || undefined,
@@ -167,7 +169,7 @@ export default function AdminPage() {
       }
 
       setUsers([data.user, ...users]);
-      setAddForm({ email: "", name: "", password: "", role: "white", classYear: "" });
+      setAddForm({ email: "", firstName: "", lastName: "", password: "", role: "white", classYear: "" });
       setShowAddForm(false);
     } catch (err) {
       setAddError(err instanceof Error ? err.message : "Failed to add user");
@@ -243,14 +245,25 @@ export default function AdminPage() {
           <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
             <form onSubmit={handleAddUser} className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
                 <input
                   type="text"
                   required
-                  value={addForm.name}
-                  onChange={(e) => setAddForm({ ...addForm, name: e.target.value })}
+                  value={addForm.firstName}
+                  onChange={(e) => setAddForm({ ...addForm, firstName: e.target.value })}
                   className="w-full border rounded-lg px-3 py-2 text-sm"
-                  placeholder="Full Name"
+                  placeholder="First Name"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                <input
+                  type="text"
+                  required
+                  value={addForm.lastName}
+                  onChange={(e) => setAddForm({ ...addForm, lastName: e.target.value })}
+                  className="w-full border rounded-lg px-3 py-2 text-sm"
+                  placeholder="Last Name"
                 />
               </div>
               <div>
@@ -333,7 +346,10 @@ export default function AdminPage() {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    User
+                    First Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Last Name
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Email
@@ -353,7 +369,10 @@ export default function AdminPage() {
                 {users.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="font-medium text-gray-900">{user.name}</div>
+                      <div className="font-medium text-gray-900">{user.first_name}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="font-medium text-gray-900">{user.last_name}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-500">
                       {user.email}

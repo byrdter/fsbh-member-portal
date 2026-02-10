@@ -207,7 +207,7 @@ export default function AdminContentPage() {
   const openCreatePost = () => {
     setPostForm({
       title: "", slug: "", content: "", excerpt: "", status: "publish",
-      featuredImage: "", author: session.user?.name || "", accessLevel: "white", categoryIds: [],
+      featuredImage: "", author: `${session.user?.firstName || ""} ${session.user?.lastName || ""}`.trim(), accessLevel: "white", categoryIds: [],
     });
     setPostError(null);
     setEditingPost(null);

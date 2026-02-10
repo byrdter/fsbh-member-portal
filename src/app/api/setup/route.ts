@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { initializeDatabase, seedDefaultUsers, initializeContentTables } from "@/lib/db";
+import { initializeDatabase, seedDefaultUsers, initializeContentTables, migrateNameColumns } from "@/lib/db";
 
 export async function GET() {
   try {
     // Initialize database tables
     await initializeDatabase();
+
+    // Migrate name columns (add first_name/last_name and split existing data)
+    await migrateNameColumns();
 
     // Initialize content tables
     await initializeContentTables();

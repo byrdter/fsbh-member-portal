@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       excerpt: excerpt || "",
       status: status || "publish",
       featuredImage,
-      author: author || session.user?.name || "",
+      author: author || `${session.user?.firstName || ""} ${session.user?.lastName || ""}`.trim() || "",
       publishedAt: new Date(),
       accessLevel: accessLevel || "white",
     });

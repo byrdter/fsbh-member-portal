@@ -4,11 +4,11 @@ import { findUserByEmail } from "@/lib/db";
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password, classYear } = await request.json();
+    const { firstName, lastName, email, password, classYear } = await request.json();
 
-    if (!name || !email || !password) {
+    if (!firstName || !lastName || !email || !password) {
       return NextResponse.json(
-        { error: "Name, email, and password are required" },
+        { error: "First name, last name, email, and password are required" },
         { status: 400 }
       );
     }
@@ -23,11 +23,11 @@ export async function POST(request: Request) {
     }
 
     // Create new user (defaults to 'white' role)
-    const user = await addUser(email, name, password, "white", classYear);
+    const user = await addUser(email, firstName, lastName, password, "white", classYear);
 
     return NextResponse.json({
       message: "Account created successfully",
-      user: { id: user.id, email: user.email, name: user.name },
+      user: { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName },
     });
   } catch (error) {
     console.error("Registration error:", error);

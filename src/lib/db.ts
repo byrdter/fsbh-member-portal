@@ -5,6 +5,8 @@ export interface DbUser {
   id: string;
   email: string;
   name: string;
+  first_name: string;
+  last_name: string;
   password: string;
   role: UserRole;
   class_year?: string;
@@ -19,12 +21,40 @@ export async function initializeDatabase() {
       id SERIAL PRIMARY KEY,
       email VARCHAR(255) UNIQUE NOT NULL,
       name VARCHAR(255) NOT NULL,
+      first_name VARCHAR(255),
+      last_name VARCHAR(255),
       password VARCHAR(255) NOT NULL,
       role VARCHAR(50) NOT NULL DEFAULT 'white',
       class_year VARCHAR(10),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
+  `;
+}
+
+// Migrate existing name column data into first_name and last_name
+export async function migrateNameColumns() {
+  // Add columns if they don't exist (safe for re-runs)
+  await sql`
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS first_name VARCHAR(255)
+  `;
+  await sql`
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS last_name VARCHAR(255)
+  `;
+
+  // Migrate existing data: split name on first space
+  await sql`
+    UPDATE users
+    SET
+      first_name = CASE
+        WHEN POSITION(' ' IN name) > 0 THEN LEFT(name, POSITION(' ' IN name) - 1)
+        ELSE name
+      END,
+      last_name = CASE
+        WHEN POSITION(' ' IN name) > 0 THEN SUBSTRING(name FROM POSITION(' ' IN name) + 1)
+        ELSE ''
+      END
+    WHERE first_name IS NULL OR last_name IS NULL
   `;
 }
 
@@ -47,14 +77,16 @@ export async function findUserById(id: string): Promise<DbUser | null> {
 // Create a new user
 export async function createUser(
   email: string,
-  name: string,
+  firstName: string,
+  lastName: string,
   hashedPassword: string,
   role: UserRole = 'white',
   classYear?: string
 ): Promise<DbUser> {
+  const name = `${firstName} ${lastName}`.trim();
   const result = await sql`
-    INSERT INTO users (email, name, password, role, class_year)
-    VALUES (${email}, ${name}, ${hashedPassword}, ${role}, ${classYear || null})
+    INSERT INTO users (email, name, first_name, last_name, password, role, class_year)
+    VALUES (${email}, ${name}, ${firstName}, ${lastName}, ${hashedPassword}, ${role}, ${classYear || null})
     RETURNING *
   `;
   return result.rows[0] as DbUser;
@@ -63,9 +95,9 @@ export async function createUser(
 // Get all users (for admin)
 export async function getAllUsers(): Promise<Omit<DbUser, 'password'>[]> {
   const result = await sql`
-    SELECT id, email, name, role, class_year, created_at, updated_at
+    SELECT id, email, name, first_name, last_name, role, class_year, created_at, updated_at
     FROM users
-    ORDER BY created_at DESC
+    ORDER BY last_name ASC, first_name ASC
   `;
   return result.rows as Omit<DbUser, 'password'>[];
 }
@@ -103,12 +135,12 @@ export async function seedDefaultUsers(hashedPasswords: {
   }
 
   await sql`
-    INSERT INTO users (email, name, password, role, class_year) VALUES
-    ('admin@fsbhtiger.com', 'Admin User', ${hashedPasswords.admin}, 'admin', NULL),
-    ('tiger@fsbhtiger.com', 'Tiger Member', ${hashedPasswords.tiger}, 'tiger', '1965'),
-    ('maroon@fsbhtiger.com', 'Maroon Member', ${hashedPasswords.maroon}, 'maroon', '1960'),
-    ('white@fsbhtiger.com', 'White Member', ${hashedPasswords.white}, 'white', '1955'),
-    ('demo@fsbhtiger.com', 'Demo Member', ${hashedPasswords.demo}, 'tiger', '1965')
+    INSERT INTO users (email, name, first_name, last_name, password, role, class_year) VALUES
+    ('admin@fsbhtiger.com', 'Admin User', 'Admin', 'User', ${hashedPasswords.admin}, 'admin', NULL),
+    ('tiger@fsbhtiger.com', 'Tiger Member', 'Tiger', 'Member', ${hashedPasswords.tiger}, 'tiger', '1965'),
+    ('maroon@fsbhtiger.com', 'Maroon Member', 'Maroon', 'Member', ${hashedPasswords.maroon}, 'maroon', '1960'),
+    ('white@fsbhtiger.com', 'White Member', 'White', 'Member', ${hashedPasswords.white}, 'white', '1955'),
+    ('demo@fsbhtiger.com', 'Demo Member', 'Demo', 'Member', ${hashedPasswords.demo}, 'tiger', '1965')
   `;
 }
 // Database: Neon Postgres

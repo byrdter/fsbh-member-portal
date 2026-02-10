@@ -32,7 +32,9 @@ export const authOptions: NextAuthOptions = {
         return {
           id: String(user.id),
           email: user.email,
-          name: user.name,
+          name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.name,
+          firstName: user.first_name,
+          lastName: user.last_name,
           role: user.role as UserRole,
           classYear: user.class_year,
         };
@@ -51,6 +53,8 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.role = user.role;
         token.classYear = user.classYear;
+        token.firstName = user.firstName;
+        token.lastName = user.lastName;
       }
       return token;
     },
@@ -59,6 +63,8 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.classYear = token.classYear;
+        session.user.firstName = token.firstName;
+        session.user.lastName = token.lastName;
       }
       return session;
     },
@@ -68,12 +74,13 @@ export const authOptions: NextAuthOptions = {
 // Helper to add new users (for registration)
 export async function addUser(
   email: string,
-  name: string,
+  firstName: string,
+  lastName: string,
   password: string,
   role: UserRole = "white",
   classYear?: string
 ) {
   const hashedPassword = bcrypt.hashSync(password, 10);
-  const newUser = await createUser(email, name, hashedPassword, role, classYear);
-  return { id: String(newUser.id), email: newUser.email, name: newUser.name, role: newUser.role };
+  const newUser = await createUser(email, firstName, lastName, hashedPassword, role, classYear);
+  return { id: String(newUser.id), email: newUser.email, firstName: newUser.first_name, lastName: newUser.last_name, role: newUser.role };
 }

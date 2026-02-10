@@ -31,11 +31,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    const { email, name, password, role, classYear } = await request.json();
+    const { email, firstName, lastName, password, role, classYear } = await request.json();
 
-    if (!email || !name || !password) {
+    if (!email || !firstName || !lastName || !password) {
       return NextResponse.json(
-        { error: "Email, name, and password are required" },
+        { error: "Email, first name, last name, and password are required" },
         { status: 400 }
       );
     }
@@ -57,10 +57,10 @@ export async function POST(request: Request) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await createUser(email, name, hashedPassword, role || "white", classYear);
+    const user = await createUser(email, firstName, lastName, hashedPassword, role || "white", classYear);
 
     return NextResponse.json({
-      user: { id: user.id, email: user.email, name: user.name, role: user.role, class_year: user.class_year },
+      user: { id: user.id, email: user.email, first_name: user.first_name, last_name: user.last_name, role: user.role, class_year: user.class_year },
     });
   } catch (error) {
     console.error("Error creating user:", error);

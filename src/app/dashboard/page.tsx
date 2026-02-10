@@ -129,7 +129,7 @@ export default function DashboardPage() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-2">
-              Welcome back, {session.user?.name?.split(" ")[0]}!
+              Welcome back, {session.user?.firstName}!
             </h1>
             <p className="text-red-100">
               Access your alumni archives and connect with your community.
