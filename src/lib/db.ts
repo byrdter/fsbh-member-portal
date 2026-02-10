@@ -190,6 +190,22 @@ export async function getAllCategories() {
   return result.rows;
 }
 
+export async function updateCategory(id: number, name: string, slug: string, parentSlug?: string) {
+  const result = await sql`
+    UPDATE categories
+    SET name = ${name}, slug = ${slug}, parent_slug = ${parentSlug || null}
+    WHERE id = ${id}
+    RETURNING *
+  `;
+  return result.rows[0] || null;
+}
+
+export async function deleteCategory(id: number): Promise<boolean> {
+  await sql`DELETE FROM post_categories WHERE category_id = ${id}`;
+  const result = await sql`DELETE FROM categories WHERE id = ${id}`;
+  return (result.rowCount ?? 0) > 0;
+}
+
 // Post functions
 export async function createPost(post: {
   wpId?: number;
@@ -263,6 +279,42 @@ export async function linkPostToCategory(postId: number, categoryId: number) {
     VALUES (${postId}, ${categoryId})
     ON CONFLICT DO NOTHING
   `;
+}
+
+export async function updatePost(id: number, post: {
+  title?: string;
+  slug?: string;
+  content?: string;
+  excerpt?: string;
+  status?: string;
+  featuredImage?: string;
+  author?: string;
+  accessLevel?: string;
+}) {
+  const result = await sql`
+    UPDATE posts SET
+      title = COALESCE(${post.title || null}, title),
+      slug = COALESCE(${post.slug || null}, slug),
+      content = COALESCE(${post.content ?? null}, content),
+      excerpt = COALESCE(${post.excerpt ?? null}, excerpt),
+      status = COALESCE(${post.status || null}, status),
+      featured_image = COALESCE(${post.featuredImage ?? null}, featured_image),
+      author = COALESCE(${post.author ?? null}, author),
+      access_level = COALESCE(${post.accessLevel || null}, access_level),
+      updated_at = CURRENT_TIMESTAMP
+    WHERE id = ${id}
+    RETURNING *
+  `;
+  return result.rows[0] || null;
+}
+
+export async function deletePost(id: number): Promise<boolean> {
+  const result = await sql`DELETE FROM posts WHERE id = ${id}`;
+  return (result.rowCount ?? 0) > 0;
+}
+
+export async function unlinkPostCategories(postId: number) {
+  await sql`DELETE FROM post_categories WHERE post_id = ${postId}`;
 }
 
 // Media functions
