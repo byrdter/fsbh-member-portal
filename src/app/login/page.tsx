@@ -100,31 +100,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <p className="text-xs text-gray-500 text-center mb-3">Demo Accounts:</p>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="bg-purple-50 p-2 rounded">
-                <span className="font-semibold text-purple-800">Admin:</span>
-                <div className="text-gray-600">admin@fsbhtiger.com</div>
-                <div className="text-gray-500">admin123</div>
-              </div>
-              <div className="bg-orange-50 p-2 rounded">
-                <span className="font-semibold text-orange-800">Tiger:</span>
-                <div className="text-gray-600">tiger@fsbhtiger.com</div>
-                <div className="text-gray-500">tiger123</div>
-              </div>
-              <div className="bg-red-50 p-2 rounded">
-                <span className="font-semibold text-red-800">Maroon:</span>
-                <div className="text-gray-600">maroon@fsbhtiger.com</div>
-                <div className="text-gray-500">maroon123</div>
-              </div>
-              <div className="bg-gray-50 p-2 rounded">
-                <span className="font-semibold text-gray-800">White:</span>
-                <div className="text-gray-600">white@fsbhtiger.com</div>
-                <div className="text-gray-500">white123</div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
